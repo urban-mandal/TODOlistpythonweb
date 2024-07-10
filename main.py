@@ -40,7 +40,6 @@ def login():
     if dbs.user_login(username, password) == True:
         print("Login was correct but the tamplate didnt get rendered")
         login_status = "true"
-        print("hello")
         return jsonify(success=True)
     else:
         return  jsonify(success=False)
