@@ -12,15 +12,15 @@ app = Flask("__name__")
 # app.config.from_object(a.get_secretkey())
 # session_current = session()
 login_status = ""
+dbc.tasks_db_initiate()
+dbs.db_users_initiate()
 
 @app.route("/")
 def index():
     global login_status
-    dbc.tasks_db_initiate()
     if login_status == "true":
-        print("Works but doesnt work")
-        return render_template("./index.html")
-    return render_template("./login.html")
+        return render_template("index.html")
+    return render_template("login.html")
 
 @app.route("/form", methods=["POST"])
 def form():
@@ -34,7 +34,6 @@ def get_tasks(id):
 @app.route("/login", methods=["POST"])
 def login():
     global login_status
-    dbs.db_users_initiate()
     username = request.form.get("username")
     password = request.form.get("password")
     if dbs.user_login(username, password) == True:
