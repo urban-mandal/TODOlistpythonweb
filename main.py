@@ -9,6 +9,11 @@ from databasefolder import get_database_loc
 
 
 app = Flask("__name__")
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,  # Requires HTTPS
+    SESSION_COOKIE_SAMESITE='Strict'
+)
 app.config.from_pyfile("secrets_file.py")
 login_status = ""
 dbc.tasks_db_initiate()
