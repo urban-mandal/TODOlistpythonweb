@@ -1,7 +1,7 @@
 from databasefolder import get_database_loc
 import sqlite3 as sq
 from argon2 import PasswordHasher
-
+# btw once you fetch from res you cant fetch again be carefull man like for a fact!!!!!!!!
 ph = PasswordHasher()
 
 db_path = get_database_loc()
@@ -18,12 +18,21 @@ def db_users_initiate():
 def user_login(user_username, password):
     con = sq.connect(db_path)
     cur = con.cursor()
-    
     res = cur.execute(f"SELECT password FROM loginInfo WHERE username= ? ", (user_username,))
-    hashed_password = res.fetchall()[0][0]
-    if verify_password(hashed_password, password) == True:
-        return True
-    return False
+    if res.fetchall():
+        res = cur.execute(f"SELECT password FROM loginInfo WHERE username= ? ", (user_username,))
+        hashed_password = res.fetchall()[0][0]
+        if verify_password(hashed_password, password) == True:
+            cur.close()
+            con.close()
+            return "logged in"
+        else:     
+            cur.close()
+            con.close()
+            return "password not correct"
+    cur.close()
+    con.close()
+    return "username not right"
 
 def add_user(username, password):
     con = sq.connect(db_path)

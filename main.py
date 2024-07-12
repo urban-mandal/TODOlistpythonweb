@@ -38,7 +38,7 @@ def login():
     password = request.form.get("password")
     username = username.strip()
     password = password.strip()
-    if dbs.user_login(username, password) == True:
+    if dbs.user_login(username, password) == "logged in":
         con = sq.connect(get_database_loc())
         cur = con.cursor()
         res = cur.execute("SELECT id FROM loginInfo WHERE username= ?", (username,))
@@ -47,8 +47,10 @@ def login():
         print(session["username"], session["id"])
         login_status = "true"
         return jsonify(success=True)
+    elif dbs.user_login(username, password) == "password not correct":
+        return jsonify(success=False, error="password not correct")
     else:
-        return  jsonify(success=False)
+        return  jsonify(success=False, error="username not correct")
     
 @app.route("/Singup", methods=["POST"])
 def singup():
@@ -66,3 +68,7 @@ def logout():
     session.pop("id", None)
     login_status = "false"
     return jsonify(success=True)
+
+@app.route("/display_username", methods=["GET"])
+def display_username():
+    return jsonify(username=session["username"])
